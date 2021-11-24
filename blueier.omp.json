@@ -139,7 +139,7 @@
                     "foreground": "#3EC669",
                     "background": "#29315A",
                     "properties": {
-                        "time_format": "15:04:05",
+                        "time_format": "15:04",
                         "prefix": "<transparent> \uE0BA\uE0BC </>"
                     }
                 }
