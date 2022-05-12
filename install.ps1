@@ -1,5 +1,9 @@
 [CmdletBinding()]
 param (
+    # Skip Installing Powershell Core
+    [Parameter()]
+    [switch]
+    $skipPowershellCore,
     # Skip Installing Terminal-Icons
     [Parameter()]
     [switch]
@@ -18,13 +22,17 @@ param (
     $skipNerdFont
 )
 
+if (!$skipPowershellCore) {
+    winget install --id Microsoft.Powershell --source winget
+}
+
 if (!$skipTerminalIcons) {
     echo "Installing Icons"
     Install-Module -Name Terminal-Icons -Repository PSGallery   
 }
 
 if (!$skipPSReadLine) {
-    echo "Installing PSReadLine"
+    echo "Installing PSReadLine (only works on Powershell Core)"
     Install-Module PSReadLine -AllowPrerelease -AllowClobber -Force
 }
 
