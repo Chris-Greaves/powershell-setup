@@ -32,7 +32,11 @@ if (!$skipTerminalIcons) {
 }
 
 if (!$skipPSReadLine) {
-    echo "Installing PSReadLine (only works on Powershell Core)"
+    if($PSVersionTable.PSEdition -ne "Core") {
+        echo "Installing PowerShellGet"
+        Install-Module -Name PowerShellGet -Force
+    }
+    echo "Installing PSReadLine"
     Install-Module PSReadLine -AllowPrerelease -AllowClobber -Force
 }
 
