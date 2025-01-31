@@ -28,7 +28,7 @@ if (!$skipPowershellCore) {
 
 if (!$skipTerminalIcons) {
     echo "Installing Icons"
-    Install-Module -Name Terminal-Icons -Repository PSGallery   
+    Install-Module -Name Terminal-Icons -Repository PSGallery
 }
 
 if (!$skipPSReadLine) {
