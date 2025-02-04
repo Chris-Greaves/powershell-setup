@@ -57,12 +57,12 @@ if (!$skipPSReadLine) {
         Install-Module -Name PowerShellGet -Force
     }
     Write-Output "Installing PSReadLine"
-    Install-Module PSReadLine -AllowPrerelease -AllowClobber -Force
+    Install-Module PSReadLine -Force
 }
 
 if (!$skipOhMyPosh) {
     Write-Output "Installing Oh My Posh"
-    winget install JanDeDobbeleer.OhMyPosh
+    winget install --accept-source-agreements JanDeDobbeleer.OhMyPosh
 }
 
 if (!$skipNerdFont) {

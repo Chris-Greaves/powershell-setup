@@ -16,5 +16,5 @@ $packages = @(
 )
 
 foreach ($package in $packages) {
-    winget install --accept-source-agreement --silent --quiet $package
+    winget install --accept-source-agreements --silent $package
 }

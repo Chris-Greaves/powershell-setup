@@ -5,4 +5,4 @@ if (!(Get-Command -Name choco)) {
     Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 }
 
-choco install $PSScriptRoot/packages.config
+choco install $PSScriptRoot/packages.config -y
