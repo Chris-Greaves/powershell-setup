@@ -7,13 +7,12 @@ if (!(Get-Command -Name winget)) {
 
 # List of packages to install
 $packages = @(
+    "Microsoft.AzureCLI"
     "dotPDN.PaintDotNet",
     "Nushell.Nushell",
-    "Eugeny.Tabby",
     "Microsoft.PowerToys",
-    "Obsidian.Obsidian",
-    "Postman.Postman",
-    "Notepad++.Notepad++"
+    "Notepad++.Notepad++",
+    "Microsoft.Powershell"
 )
 
 foreach ($package in $packages) {

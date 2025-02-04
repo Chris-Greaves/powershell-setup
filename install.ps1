@@ -1,5 +1,13 @@
 [CmdletBinding()]
 param (
+    # Skip Installing Winget and Packages
+    [Parameter()]
+    [switch]
+    $skipWingetInstall,
+    # Skip Installing Chocolately
+    [Parameter()]
+    [switch]
+    $skipChocolatelyInstall,
     # Skip Installing Powershell Core
     [Parameter()]
     [switch]
@@ -19,59 +27,76 @@ param (
     # Skip Installing Nerd Font
     [Parameter()]
     [switch]
-    $skipNerdFont
+    $skipNerdFont,
+    # Skip Installing GGH
+    [Parameter()]
+    [switch]
+    $skipGGH
 )
+
+if (!$skipWingetInstall) {
+    Invoke-Expression -Command $PSScriptRoot/winget_install.ps1
+}
+
+if (!$skipChocolatelyInstall) {
+    Invoke-Expression -Command $PSScriptRoot/chocolately_install.ps1
+}
 
 if (!$skipPowershellCore) {
     winget install --id Microsoft.Powershell --source winget
 }
 
 if (!$skipTerminalIcons) {
-    echo "Installing Icons"
+    Write-Output "Installing Icons"
     Install-Module -Name Terminal-Icons -Repository PSGallery
 }
 
 if (!$skipPSReadLine) {
     if($PSVersionTable.PSEdition -ne "Core") {
-        echo "Installing PowerShellGet"
+        Write-Output "Installing PowerShellGet"
         Install-Module -Name PowerShellGet -Force
     }
-    echo "Installing PSReadLine"
+    Write-Output "Installing PSReadLine"
     Install-Module PSReadLine -AllowPrerelease -AllowClobber -Force
 }
 
 if (!$skipOhMyPosh) {
-    echo "Installing Oh My Posh"
+    Write-Output "Installing Oh My Posh"
     winget install JanDeDobbeleer.OhMyPosh
 }
 
 if (!$skipNerdFont) {
-    echo "Installing Nerd fonts"
+    Write-Output "Installing Nerd fonts"
     $dloadLink = "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip"
     $tempFolder = "$env:temp\PowerShell-Setup"
     $tempFontZip = "$tempFolder\fonts.zip"
 
-    md -Force "$tempFolder\fonts"
+    mkdir -Force "$tempFolder\fonts"
 
-    echo "Downloading fonts"
+    Write-Output "Downloading fonts"
     Invoke-WebRequest -Uri $dloadLink -OutFile $tempFontZip
     Expand-Archive -Path $tempFontZip -DestinationPath "$tempFolder\fonts"
 
-    echo "Installing each ttf font"
+    Write-Output "Installing each ttf font"
     $fonts = (New-Object -ComObject Shell.Application).Namespace(0x14)
-    foreach ($file in gci "$tempFolder\fonts\*.ttf")
+    foreach ($file in Get-ChildItem "$tempFolder\fonts\*.ttf")
     {
         $fileName = $file.Name
         if (-not(Test-Path -Path "C:\Windows\fonts\$fileName" )) {
-            echo $fileName
-            dir $file | %{ $fonts.CopyHere($_.fullname) }
+            Write-Output $fileName
+            Get-ChildItem $file | %{ $fonts.CopyHere($_.fullname) }
         }
     }
-    cp "$tempFolder\fonts\*.ttf" C:\windows\fonts\
+    Copy-Item "$tempFolder\fonts\*.ttf" C:\windows\fonts\
 }
 
-echo "Copying PowerShell profile"
+if (!$skipGGH) {
+    Write-Output "Installing GGH"
+    powershell -c "irm https://raw.githubusercontent.com/byawitz/ggh/master/install/windows.ps1 | iex"
+}
+
+Write-Output "Copying PowerShell profile"
 Copy-Item ".\Microsoft.PowerShell_profile.ps1" -Destination $profile
 
-echo "Copying Oh My Posh theme"
+Write-Output "Copying Oh My Posh theme"
 Copy-Item ".\blueier.omp.json" -Destination $HOME
