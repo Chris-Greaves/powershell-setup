@@ -84,7 +84,7 @@ if (!$skipNerdFont) {
         $fileName = $file.Name
         if (-not(Test-Path -Path "C:\Windows\fonts\$fileName" )) {
             Write-Output $fileName
-            Get-ChildItem $file | %{ $fonts.CopyHere($_.fullname) }
+            Get-ChildItem $file | ForEach-Object { $fonts.CopyHere($_.fullname) }
         }
     }
     Copy-Item "$tempFolder\fonts\*.ttf" C:\windows\fonts\
